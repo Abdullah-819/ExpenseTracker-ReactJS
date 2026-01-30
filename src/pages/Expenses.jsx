@@ -1,4 +1,7 @@
 import { useExpenses } from "../hooks/useExpenses"
+import ExpensePie from "../components/ExpensePie.jsx"
+import ExpenseBar from "../components/ExpenseBar.jsx"
+
 
 function Expenses() {
   const { expenses } = useExpenses()
@@ -18,6 +21,12 @@ function Expenses() {
             <p>{e.date}</p>
           </div>
         ))}
+      </div>
+
+      <div className="card">
+        <h1>Charts</h1>
+        <ExpensePie />
+        <ExpenseBar />
       </div>
     </div>
   )
