@@ -15,25 +15,14 @@ export function ExpenseProvider({ children }) {
 
     const stored = getUserData(user.username)
 
-    if (!stored) {
+    if (!stored || shouldReset(stored.lastReset)) {
       const freshData = {
         expenses: [],
         budget: null,
         lastReset: Date.now()
       }
-      setUserData(user.username, freshData)
-      setExpenses([])
-      setBudget(null)
-      return
-    }
 
-    if (shouldReset(stored.lastReset)) {
-      const resetData = {
-        expenses: [],
-        budget: null,
-        lastReset: Date.now()
-      }
-      setUserData(user.username, resetData)
+      setUserData(user.username, freshData)
       setExpenses([])
       setBudget(null)
       return
@@ -57,6 +46,16 @@ export function ExpenseProvider({ children }) {
     setExpenses(prev => [...prev, expense])
   }
 
+  const deleteExpense = id => {
+    setExpenses(prev => prev.filter(e => e.id !== id))
+  }
+
+  const updateExpense = updatedExpense => {
+    setExpenses(prev =>
+      prev.map(e => (e.id === updatedExpense.id ? updatedExpense : e))
+    )
+  }
+
   const totalSpent = expenses.reduce((sum, e) => sum + e.amount, 0)
   const remainingBudget = budget !== null ? budget - totalSpent : null
 
@@ -67,6 +66,8 @@ export function ExpenseProvider({ children }) {
         budget,
         setBudget,
         addExpense,
+        deleteExpense,
+        updateExpense,
         totalSpent,
         remainingBudget
       }}

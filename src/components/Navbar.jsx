@@ -15,7 +15,7 @@ function Navbar({ onMenu }) {
       <button className="menu-btn" onClick={onMenu}>☰</button>
 
       <div className="nav-links">
-        <Link to="/">Dashboard</Link>
+        <Link to="/expenses">Dashboard</Link>
         <Link to="/add">Add</Link>
         <Link to="/expenses">Expenses</Link>
         <Link to="/budget">Budget</Link>
