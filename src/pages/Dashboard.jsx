@@ -1,5 +1,7 @@
 import { useAuth } from "../hooks/useAuth"
 import { useExpenses } from "../hooks/useExpenses"
+import ExpensePie from "../components/ExpensePie.jsx"
+import ExpenseBar from "../components/ExpenseBar.jsx"
 import { Link } from "react-router-dom"
 
 function Dashboard() {
@@ -21,7 +23,7 @@ function Dashboard() {
 
   return (
     <div className="page">
-      <div className={`card ${lowBudget ? "budget-warning" : ""}`}>
+      <div className={`card charts-card ${lowBudget ? "budget-warning" : ""}`}>
         <h1>Dashboard</h1>
         <p>User: {user.name}</p>
 
@@ -34,19 +36,12 @@ function Dashboard() {
           </>
         ) : (
           <>
-            <div className="stat">
-              <p>Total Budget</p>
-              <p>{budget}</p>
+            <div className="chart-box">
+              <ExpensePie />
             </div>
 
-            <div className="stat">
-              <p>Total Spent</p>
-              <p>{totalSpent}</p>
-            </div>
-
-            <div className="stat">
-              <p>Remaining</p>
-              <p>{remainingBudget}</p>
+            <div className="chart-box">
+              <ExpenseBar />
             </div>
 
             {lowBudget && (

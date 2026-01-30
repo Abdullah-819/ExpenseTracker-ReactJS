@@ -1,6 +1,6 @@
-import { Routes, Route, Navigate } from "react-router-dom"
+import { Routes, Route, Navigate, useLocation } from "react-router-dom"
 import { useAuth } from "./hooks/useAuth"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import Navbar from "./components/Navbar"
 import MobileMenu from "./components/MobileMenu"
@@ -12,8 +12,21 @@ import AddExpense from "./pages/AddExpense"
 import Budget from "./pages/Budget"
 
 function App() {
-  const { user } = useAuth()
+  const { user, loading } = useAuth()
   const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [location.pathname])
+
+  if (loading) {
+    return (
+      <div className="app-loader">
+        <div className="spinner" />
+      </div>
+    )
+  }
 
   if (!user) {
     return (
@@ -26,8 +39,15 @@ function App() {
 
   return (
     <>
-      <Navbar onMenu={() => setMenuOpen(true)} />
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
+      <Navbar
+        menuOpen={menuOpen}
+        onMenu={() => setMenuOpen(prev => !prev)}
+      />
+
+      <MobileMenu
+        open={menuOpen}
+        onClose={() => setMenuOpen(false)}
+      />
 
       <Routes>
         <Route path="/" element={<Dashboard />} />
