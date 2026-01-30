@@ -9,38 +9,55 @@ export function ExpenseProvider({ children }) {
   const { user } = useAuth()
   const [expenses, setExpenses] = useState([])
   const [budget, setBudget] = useState(null)
+  const [lastReset, setLastReset] = useState(null)
 
   useEffect(() => {
     if (!user) return
 
     const stored = getUserData(user.username)
 
-    if (!stored || shouldReset(stored.lastReset)) {
-      const freshData = {
+    if (!stored) {
+      const initData = {
         expenses: [],
         budget: null,
         lastReset: Date.now()
       }
 
-      setUserData(user.username, freshData)
+      setUserData(user.username, initData)
       setExpenses([])
       setBudget(null)
+      setLastReset(initData.lastReset)
+      return
+    }
+
+    if (shouldReset(stored.lastReset)) {
+      const resetData = {
+        expenses: [],
+        budget: null,
+        lastReset: Date.now()
+      }
+
+      setUserData(user.username, resetData)
+      setExpenses([])
+      setBudget(null)
+      setLastReset(resetData.lastReset)
       return
     }
 
     setExpenses(stored.expenses)
     setBudget(stored.budget)
+    setLastReset(stored.lastReset)
   }, [user])
 
   useEffect(() => {
-    if (!user) return
+    if (!user || lastReset === null) return
 
     setUserData(user.username, {
       expenses,
       budget,
-      lastReset: Date.now()
+      lastReset
     })
-  }, [expenses, budget, user])
+  }, [expenses, budget, lastReset, user])
 
   const addExpense = expense => {
     setExpenses(prev => [...prev, expense])
@@ -69,7 +86,8 @@ export function ExpenseProvider({ children }) {
         deleteExpense,
         updateExpense,
         totalSpent,
-        remainingBudget
+        remainingBudget,
+        lastReset
       }}
     >
       {children}

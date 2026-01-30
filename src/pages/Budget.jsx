@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useExpenses } from "../hooks/useExpenses"
+import BudgetPie from "../components/Budgetpie.jsx"
 
 function Budget() {
   const { budget, setBudget, remainingBudget, totalSpent } = useExpenses()
@@ -30,11 +31,24 @@ function Budget() {
         </form>
 
         {budget !== null && (
-          <div className="stat">
-            <p>Total Budget: {budget}</p>
-            <p>Total Spent: {totalSpent}</p>
-            <p>Remaining: {remainingBudget}</p>
-          </div>
+          <>
+            <BudgetPie />
+
+            <div className="stat">
+              <p>Total Budget</p>
+              <p>{budget}</p>
+            </div>
+
+            <div className="stat">
+              <p>Total Spent</p>
+              <p>{totalSpent}</p>
+            </div>
+
+            <div className="stat">
+              <p>Remaining</p>
+              <p>{remainingBudget}</p>
+            </div>
+          </>
         )}
       </div>
     </div>

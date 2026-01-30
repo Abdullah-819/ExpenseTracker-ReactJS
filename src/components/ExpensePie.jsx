@@ -1,10 +1,10 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts"
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts"
 import { useExpenses } from "../hooks/useExpenses"
 
-const COLORS = ["#00c6ff", "#0072ff", "#7f5af0", "#ff8906", "#ff5c5c"]
+const COLORS = ["#ff8f1f", "#22c55e", "#facc15", "#38bdf8", "#a855f7"]
 
 function ExpensePie() {
-  const { expenses } = useExpenses()
+  const { expenses, totalSpent } = useExpenses()
 
   const data = Object.values(
     expenses.reduce((acc, e) => {
@@ -14,19 +14,34 @@ function ExpensePie() {
     }, {})
   )
 
-  if (data.length === 0) return <p>No data</p>
+  if (data.length === 0) return null
 
   return (
-    <ResponsiveContainer width="100%" height={250}>
-      <PieChart>
-        <Pie data={data} dataKey="value" nameKey="name" outerRadius={90}>
-          {data.map((_, i) => (
-            <Cell key={i} fill={COLORS[i % COLORS.length]} />
-          ))}
-        </Pie>
-        <Tooltip />
-      </PieChart>
-    </ResponsiveContainer>
+    <div className="donut-wrapper">
+      <ResponsiveContainer width="100%" height={260}>
+        <PieChart>
+          <Pie
+            data={data}
+            dataKey="value"
+            innerRadius={85}
+            outerRadius={110}
+            paddingAngle={6}
+            startAngle={90}
+            endAngle={-270}
+            cornerRadius={12}
+          >
+            {data.map((_, i) => (
+              <Cell key={i} fill={COLORS[i % COLORS.length]} />
+            ))}
+          </Pie>
+        </PieChart>
+      </ResponsiveContainer>
+
+      <div className="donut-center">
+        <p className="donut-amount">Rs {totalSpent}</p>
+        <p className="donut-label">Total Expense</p>
+      </div>
+    </div>
   )
 }
 

@@ -30,8 +30,8 @@ function App() {
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />
 
       <Routes>
-        <Route path="/" element={<Navigate to="/expenses" />} />
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" element={<Navigate to="/" />} />
         <Route path="/expenses" element={<Expenses />} />
         <Route path="/add" element={<AddExpense />} />
         <Route path="/budget" element={<Budget />} />
