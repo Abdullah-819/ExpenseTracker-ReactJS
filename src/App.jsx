@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard"
 import Expenses from "./pages/Expenses"
 import AddExpense from "./pages/AddExpense"
 import Budget from "./pages/Budget"
+import Profile from "./pages/Profile"
 
 function App() {
   const { user, loading } = useAuth()
@@ -50,6 +51,7 @@ function App() {
       />
 
       <Routes>
+        <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Navigate to="/" />} />
         <Route path="/expenses" element={<Expenses />} />

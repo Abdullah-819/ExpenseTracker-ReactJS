@@ -81,6 +81,14 @@ function MobileMenu({ open, onClose }) {
         >
           Dashboard
         </Link>
+        <Link
+  to="/profile"
+  onClick={onClose}
+  className={pathname === "/profile" ? "active" : ""}
+>
+  Profile
+</Link>
+
       </div>
     </div>
   )

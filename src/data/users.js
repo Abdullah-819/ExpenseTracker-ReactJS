@@ -8,5 +8,10 @@ export const users = [
     username: "user1",
     password: "user123",
     name: "User One"
+  },
+  {
+    username: "Admin Lite",
+    password: "123",
+    name: "testingman"
   }
 ]
