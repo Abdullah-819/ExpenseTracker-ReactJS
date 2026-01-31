@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 
 import Navbar from "./components/Navbar"
 import MobileMenu from "./components/MobileMenu"
-
+import SetSavings from "./pages/SetSavings"
 import Login from "./pages/Login"
 import Dashboard from "./pages/Dashboard"
 import Expenses from "./pages/Expenses"
@@ -51,6 +51,7 @@ function App() {
       />
 
       <Routes>
+        <Route path="/set-savings" element={<SetSavings />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Navigate to="/" />} />

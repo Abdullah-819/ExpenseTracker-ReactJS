@@ -9,6 +9,7 @@ export function ExpenseProvider({ children }) {
   const { user } = useAuth()
   const [expenses, setExpenses] = useState([])
   const [budget, setBudget] = useState(null)
+  const [savingTarget, setSavingTarget] = useState(null)
   const [lastReset, setLastReset] = useState(null)
 
   useEffect(() => {
@@ -20,12 +21,14 @@ export function ExpenseProvider({ children }) {
       const initData = {
         expenses: [],
         budget: null,
+        savingTarget: null,
         lastReset: Date.now()
       }
 
       setUserData(user.username, initData)
       setExpenses([])
       setBudget(null)
+      setSavingTarget(null)
       setLastReset(initData.lastReset)
       return
     }
@@ -34,18 +37,21 @@ export function ExpenseProvider({ children }) {
       const resetData = {
         expenses: [],
         budget: null,
+        savingTarget: stored.savingTarget ?? null,
         lastReset: Date.now()
       }
 
       setUserData(user.username, resetData)
       setExpenses([])
       setBudget(null)
+      setSavingTarget(resetData.savingTarget)
       setLastReset(resetData.lastReset)
       return
     }
 
     setExpenses(stored.expenses)
     setBudget(stored.budget)
+    setSavingTarget(stored.savingTarget ?? null)
     setLastReset(stored.lastReset)
   }, [user])
 
@@ -55,9 +61,10 @@ export function ExpenseProvider({ children }) {
     setUserData(user.username, {
       expenses,
       budget,
+      savingTarget,
       lastReset
     })
-  }, [expenses, budget, lastReset, user])
+  }, [expenses, budget, savingTarget, lastReset, user])
 
   const addExpense = expense => {
     setExpenses(prev => [...prev, expense])
@@ -82,6 +89,8 @@ export function ExpenseProvider({ children }) {
         expenses,
         budget,
         setBudget,
+        savingTarget,
+        setSavingTarget,
         addExpense,
         deleteExpense,
         updateExpense,
