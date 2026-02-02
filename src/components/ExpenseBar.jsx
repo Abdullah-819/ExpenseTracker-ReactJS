@@ -5,32 +5,30 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid
+  CartesianGrid,
+  Cell
 } from "recharts"
 import { useExpenses } from "../hooks/useExpenses"
+import { useState, useEffect } from "react"
 
 function ExpenseBar() {
   const { expenses } = useExpenses()
+  const [activeCategory, setActiveCategory] = useState(null)
 
   if (expenses.length === 0) return null
 
+  const maxAmount = Math.max(...expenses.map(e => e.amount))
+
+  useEffect(() => {
+    const handler = e => setActiveCategory(e.detail)
+    window.addEventListener("PIE_HOVER", handler)
+    return () => window.removeEventListener("PIE_HOVER", handler)
+  }, [])
+
   return (
     <ResponsiveContainer width="100%" height={260}>
-      <BarChart
-        data={expenses}
-        margin={{ top: 20, right: 10, left: 0, bottom: 10 }}
-      >
-        <defs>
-          <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22d3ee" />
-            <stop offset="100%" stopColor="#0284c7" />
-          </linearGradient>
-        </defs>
-
-        <CartesianGrid
-          stroke="rgba(255,255,255,0.08)"
-          vertical={false}
-        />
+      <BarChart data={expenses} margin={{ top: 20, bottom: 10 }}>
+        <CartesianGrid stroke="rgba(255,255,255,0.08)" vertical={false} />
 
         <XAxis
           dataKey="title"
@@ -46,21 +44,45 @@ function ExpenseBar() {
         />
 
         <Tooltip
+          cursor={{ fill: "rgba(255,255,255,0.06)" }}
           contentStyle={{
-            background: "rgba(20,30,40,0.95)",
-            borderRadius: "10px",
+            background: "rgba(15,25,35,0.95)",
+            borderRadius: 10,
             border: "none",
-            color: "#fff"
+            color: "#7df9ff"
           }}
-          cursor={{ fill: "rgba(255,255,255,0.05)" }}
+          formatter={(v) => [`Rs ${v}`, "SPENT"]}
         />
 
         <Bar
           dataKey="amount"
-          fill="url(#barGradient)"
-          radius={[10, 10, 0, 0]}
-          barSize={42}
-        />
+          barSize={40}
+          radius={[8, 8, 0, 0]}
+          onMouseLeave={() =>
+            window.dispatchEvent(
+              new CustomEvent("BAR_HOVER", { detail: null })
+            )
+          }
+        >
+          {expenses.map((e, i) => {
+            const isActive =
+              activeCategory === null || activeCategory === e.category
+            const isPeak = e.amount === maxAmount
+
+            return (
+              <Cell
+                key={i}
+                fill={isPeak ? "#7df9ff" : "#22d3ee"}
+                opacity={isActive ? 1 : 0.25}
+                onMouseEnter={() =>
+                  window.dispatchEvent(
+                    new CustomEvent("BAR_HOVER", { detail: e.category })
+                  )
+                }
+              />
+            )
+          })}
+        </Bar>
       </BarChart>
     </ResponsiveContainer>
   )
